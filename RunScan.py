@@ -25,8 +25,21 @@ while True:
         status = util.toHexString([sw1, sw2])
 
         print uid
-        d = {'id_bus': 1,  'uid_penumpang': uid}
-        requests.post("http://127.0.0.1/rest_ci/index.php/penumpang", data=d)
-        time.sleep(2)
+        URL = "http://acadia-gemastik.my.id/rest_ci/index.php/penumpang"
+        PARAMS = {'uid':uid} 
+        r = requests.get(url = URL, params = PARAMS) 
+        data = r.json()
+        jumlah = len(data)
+
+        if jumlah > 0 and data[0]['status'] == '1' :
+            put = {'id' : data[0]['id_penumpang'], 'status' : 0}
+            put = requests.put(url = URL, data = put)
+            print put.status_code
+            time.sleep(4)
+        else :
+            d = {'id_bus': 1,  'uid_penumpang': uid}
+            requests.post("http://acadia-gemastik.my.id/rest_ci/index.php/penumpang", data=d)
+            print "Data berhasil diinput"
+            time.sleep(4)
     except:
         print("no connection")
